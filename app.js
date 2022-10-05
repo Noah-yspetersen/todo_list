@@ -1,11 +1,9 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const ejs = require('ejs');
-const ejsMate = require('ejs-mate');
-const todos = require('./todos');
+const app = express();
 const path = require('path');
+const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost:27017/todo-list', {
+mongoose.connect('mongodb://localhost:27017/todo_list', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
@@ -16,15 +14,16 @@ db.once("open", () => {
     console.log('Database Connected!');
 });
 
-const app = express();
-
-app.engine('ejs', ejsMate)
+// app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs')
-app.set('view engine', 'ejs')
-app.set('views', path.join(__dirname, 'views'))
+app.set('views', path.join(__dirname, '/views'))
 
-app.get('/todos', (req, res) => {
-    res.send('Welcome!')
+// app.use(express.urlencoded({ extended: true }));
+// app.use(methodOverride('_method'));
+// app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/todolist', (req, res) => {
+    res.render('index.ejs')
 })
 
 app.listen(3000, () => {
