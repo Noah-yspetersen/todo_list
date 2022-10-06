@@ -12,21 +12,26 @@
 <body>
     <div class="row">
         <div class="col-4 offset-4">
-            <div class="card my-3">
+            <div class="card mt-3">
                 <div class="card-body">
                     <div class="card mb-3" style="width: 27rem;">
                         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBEJoK50Apcz2KZ1OHotzAgiENRXdqz_ZxHbwbocy5hg&s"
                             class="card-img-top" alt="...">
                     </div>
-                    <div class="card-title">
+                    <div class="card-title text-center">
                         <h2>All Todos!</h4>
                     </div>
-                    <div class="card" style="width: 18rem;">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">Walk Dog</li>
-                            <li class="list-group-item">Clean Garage</li>
-                            <li class="list-group-item">Go to Doctor</li>
-                        </ul>
+                    <div class="card">
+                        <% for(todo of todos) { %>
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <%= todo.title %>
+                                </h5>
+                                <p class="card-text">
+                                    <%= todo.description %>
+                                </p>
+                            </div>
+                            <% } %>
                     </div>
                 </div>
             </div>
