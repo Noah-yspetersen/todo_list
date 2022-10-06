@@ -28,7 +28,7 @@ app.get('/todolist/new', (req, res) => {
 });
 
 app.post('/todolist', (req, res) => {
-    console.log(req.body)
+    res.send(req.body)
 })
 
 app.listen(3000, () => {
