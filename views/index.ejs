@@ -22,18 +22,23 @@
                         <h2>All Todos!</h4>
                             <a href="/todolist/new">Create new Todo</a>
                     </div>
-                    <div class="card">
-                        <% for(todo of todos) { %>
+                    <% for(todo of todos) { %>
+                        <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">
+                                <h5>
                                     <%= todo.title %>
                                 </h5>
-                                <p class="card-text">
-                                    <%= todo.description %>
-                                </p>
+                                <ul>
+                                    <li class="card-text">
+                                        <%= todo.description %>
+                                    </li>
+                                </ul>
+                                <a href="/todolist/<%= todo._id %> ">View:
+                                    <%= todo.title%>
+                                </a>
                             </div>
-                            <% } %>
-                    </div>
+                        </div>
+                        <% } %>
                 </div>
             </div>
         </div>
