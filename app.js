@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const mongoose = require('mongoose');
+const methodOverride = require('method-override')
 
 const Todo = require('./model/todos');
 
@@ -40,6 +41,20 @@ app.get('/todolist/:id', async (req, res) => {
     const { id } = req.params;
     const todo = await Todo.findById(id)
     res.render('show.ejs', { todo })
+})
+
+app.get('/todolist/:id/edit', async (req, res) => {
+    const { id } = req.params;
+    const todo = await Todo.findById(id);
+    res.render('edit.ejs', { todo })
+})
+
+app.post('/todolist/:id', async (req, res) => {
+    const { id } = req.params;
+    console.log(req.body)
+    const todo = await Todo.findByIdAndUpdate(id, { ...req.body });
+    await todo.save();
+    res.redirect(`/todolist/${todo._id}`);
 })
 
 app.listen(3000, () => {
