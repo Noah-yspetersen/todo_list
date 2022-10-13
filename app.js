@@ -18,6 +18,8 @@ db.once("open", () => {
 });
 
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
+
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, '/views'))
 
@@ -55,6 +57,12 @@ app.post('/todolist/:id', async (req, res) => {
     const todo = await Todo.findByIdAndUpdate(id, { ...req.body });
     await todo.save();
     res.redirect(`/todolist/${todo._id}`);
+})
+
+app.delete('/todolist/:id', async (req, res) => {
+    const { id } = req.params;
+    await Todo.findByIdAndDelete(id);
+    res.redirect('/todolist');
 })
 
 app.listen(3000, () => {

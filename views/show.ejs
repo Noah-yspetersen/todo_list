@@ -47,6 +47,9 @@
                             todo
                         </a>
                     </div>
+                    <form action="/todolist/<%=todo._id%>?_method=DELETE" method="POST" class="mt-3">
+                        <button class="btn btn-danger">Delete</button>
+                    </form>
                 </div>
             </div>
         </div>
