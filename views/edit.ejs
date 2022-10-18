@@ -34,6 +34,11 @@
                                     <input class="form-control" type="text" id="description" name="description"
                                         value="<%= todo.description %>" required>
                                 </div>
+                                <div class="btn btn-secondary">
+                                    <a href="/todolist<%= todo._id %>"
+                                        class="list-group-item list-group-item-action">Back
+                                    </a>
+                                </div>
                                 <button class="btn btn-success">Submit</button>
                                 <div class="list-group mt-3">
                                     <a href="/todolist" class="list-group-item list-group-item-action active"

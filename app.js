@@ -2,9 +2,11 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const mongoose = require('mongoose');
-const methodOverride = require('method-override')
+const methodOverride = require('method-override');
+const bcrypt = require('bcrypt');
 
-const Todo = require('./model/todos');
+const Todo = require('./models/todos');
+const User = require('./models/user');
 
 mongoose.connect('mongodb://localhost:27017/todo-list', {
     useNewUrlParser: true,
@@ -22,6 +24,22 @@ app.use(methodOverride('_method'));
 
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, '/views'))
+
+app.get('/register', (req, res) => {
+    res.render('register.ejs')
+})
+
+app.post('/register', async (req, res) => {
+    const { username, password } = req.body;
+    // bcrypt.hash - auto-gen a salt and hash
+    const hashedPw = await bcrypt.hash(password, 10);
+    const user = new User({
+        username: username,
+        password: hashedPw
+    })
+    await user.save();
+    res.redirect('/todolist');
+})
 
 app.get('/todolist', async (req, res) => {
     const todos = await Todo.find({});
