@@ -4,6 +4,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const bcrypt = require('bcrypt');
+const expressLayouts = require('express-ejs-layouts');
 
 const Todo = require('./models/todos');
 const User = require('./models/user');
@@ -21,9 +22,12 @@ db.once("open", () => {
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+app.use(expressLayouts);
 
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, '/views'))
+app.set("layout extractScripts", true)
+app.set('layout', 'layouts/boilerplate.ejs');
 
 app.get('/register', (req, res) => {
     res.render('register.ejs')
