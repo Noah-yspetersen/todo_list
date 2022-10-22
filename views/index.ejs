@@ -1,48 +1,35 @@
-<div class="row">
-    <!-- How do i tell the column to only offset-4 when lg -->
-    <div class="col-6 offset-3">
-        <div class="card mt-3">
-            <div class="card-body">
-                <div class="card mb-3">
-                    <img
-                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBEJoK50Apcz2KZ1OHotzAgiENRXdqz_ZxHbwbocy5hg&s">
-                </div>
-                <div class="card-title text-center">
-                    <h2>All Todos!</h2>
-                    <div class="list-group mt-3">
-                        <a href="/todolist/new" class="list-group-item list-group-item-action active"
-                            aria-current="true">Create new Todo
-                        </a>
-                    </div>
-                </div>
-                <!-- Individual todo card -->
-                <% for(todo of todos) { %>
-                    <div class="card">
-                        <div class="card-body">
-                            <div>
-                                <h5><b>
-                                        <ol>
-                                            <li>
-                                                <%= todo.title %>
-                                            </li>
-                                        </ol>
-                                    </b>
-                                </h5>
-                                <ul>
-                                    <li class="card-text">
-                                        <%= todo.description %>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="btn btn-dark">
-                                <a href="/todolist/<%= todo._id %>" class="list-group-item list-group-item-action">View:
-                                    <%= todo.title%>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <% } %>
+<div class="card-title text-center">
+    <h2>All Todos!</h2>
+    <div class="list-group mt-3">
+        <a href="/todolist/new" class="list-group-item list-group-item-action active" aria-current="true">Create new
+            Todo
+        </a>
+    </div>
+</div>
+<!-- Individual todo card -->
+<% for(todo of todos) { %>
+    <div class="card">
+        <div class="card-body">
+            <div>
+                <h5><b>
+                        <ol>
+                            <li>
+                                <%= todo.title %>
+                            </li>
+                        </ol>
+                    </b>
+                </h5>
+                <ul>
+                    <li class="card-text">
+                        <%= todo.description %>
+                    </li>
+                </ul>
+            </div>
+            <div class="btn btn-dark">
+                <a href="/todolist/<%= todo._id %>" class="list-group-item list-group-item-action">View:
+                    <%= todo.title%>
+                </a>
             </div>
         </div>
     </div>
-</div>
+    <% } %>

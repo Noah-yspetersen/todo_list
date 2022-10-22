@@ -45,6 +45,21 @@ app.post('/register', async (req, res) => {
     res.redirect('/todolist');
 })
 
+app.get('/login', (req, res) => {
+    res.render('login.ejs')
+})
+
+app.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+    const user = await User.findOne({ username: username });
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (validPassword) {
+        res.redirect('/todolist')
+    } else {
+        res.send('TRY AGAIN!')
+    }
+});
+
 app.get('/todolist', async (req, res) => {
     const todos = await Todo.find({});
     res.render('index.ejs', { todos })
