@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const bcrypt = require('bcrypt');
 const expressLayouts = require('express-ejs-layouts');
+// var cookie = require('cookie');
+const session = require('express-session')
 
 const Todo = require('./models/todos');
 const User = require('./models/user');
@@ -20,6 +22,13 @@ db.once("open", () => {
     console.log('Mongo Database Connected!');
 });
 
+app.use(session({
+    secret: "thisismysecret",
+    saveUninitialized: true,
+    resave: false
+}));
+
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(expressLayouts);
@@ -28,6 +37,15 @@ app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, '/views'))
 app.set("layout extractScripts", true)
 app.set('layout', 'layouts/boilerplate.ejs');
+
+// const requireLogin = function (req, res, next) {
+//     if (req.session.user_id) {
+//         next();
+//     }
+//     else {
+//         res.send('NOT LOGGED IN!')
+//     }
+// }
 
 app.get('/register', (req, res) => {
     res.render('register.ejs')
@@ -42,6 +60,7 @@ app.post('/register', async (req, res) => {
         password: hashedPw
     })
     await user.save();
+    req.session.user_id = user._id;
     res.redirect('/todolist');
 })
 
@@ -55,10 +74,16 @@ app.post('/login', async (req, res) => {
     const validPassword = await bcrypt.compare(password, user.password);
     if (validPassword) {
         res.redirect('/todolist')
+        req.session.user_id = user._id;
     } else {
-        res.send('TRY AGAIN!')
+        res.redirect('/login')
     }
 });
+
+app.post('/logout', (req, res) => {
+    req.session.user_id = null;
+    res.redirect('/todolist')
+})
 
 app.get('/todolist', async (req, res) => {
     const todos = await Todo.find({});
@@ -66,7 +91,12 @@ app.get('/todolist', async (req, res) => {
 })
 
 app.get('/todolist/new', (req, res) => {
-    res.render('new.ejs')
+    if (!req.session.user_id) {
+        return res.redirect('/login')
+    }
+    else {
+        res.render('new.ejs')
+    }
 });
 
 app.post('/todolist', async (req, res) => {
