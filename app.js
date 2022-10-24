@@ -38,14 +38,14 @@ app.set('views', path.join(__dirname, '/views'))
 app.set("layout extractScripts", true)
 app.set('layout', 'layouts/boilerplate.ejs');
 
-// const requireLogin = function (req, res, next) {
-//     if (req.session.user_id) {
-//         next();
-//     }
-//     else {
-//         res.send('NOT LOGGED IN!')
-//     }
-// }
+const requireLogin = function (req, res, next) {
+    if (req.session.user_id) {
+        return next();
+    }
+    else {
+        res.redirect('/login')
+    }
+}
 
 app.get('/register', (req, res) => {
     res.render('register.ejs')
@@ -90,13 +90,8 @@ app.get('/todolist', async (req, res) => {
     res.render('index.ejs', { todos })
 })
 
-app.get('/todolist/new', (req, res) => {
-    if (!req.session.user_id) {
-        return res.redirect('/login')
-    }
-    else {
-        res.render('new.ejs')
-    }
+app.get('/todolist/new', requireLogin, (req, res) => {
+    res.render('new.ejs')
 });
 
 app.post('/todolist', async (req, res) => {
