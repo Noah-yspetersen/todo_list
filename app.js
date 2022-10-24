@@ -73,8 +73,8 @@ app.post('/login', async (req, res) => {
     const user = await User.findOne({ username: username });
     const validPassword = await bcrypt.compare(password, user.password);
     if (validPassword) {
-        res.redirect('/todolist')
         req.session.user_id = user._id;
+        res.redirect('/todolist')
     } else {
         res.redirect('/login')
     }
