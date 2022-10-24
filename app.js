@@ -53,12 +53,7 @@ app.get('/register', (req, res) => {
 
 app.post('/register', async (req, res) => {
     const { username, password } = req.body;
-    // bcrypt.hash - auto-gen a salt and hash
-    const hashedPw = await bcrypt.hash(password, 10);
-    const user = new User({
-        username: username,
-        password: hashedPw
-    })
+    const user = new User({ username, password })
     await user.save();
     req.session.user_id = user._id;
     res.redirect('/todolist');
@@ -70,10 +65,9 @@ app.get('/login', (req, res) => {
 
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
-    const user = await User.findOne({ username: username });
-    const validPassword = await bcrypt.compare(password, user.password);
-    if (validPassword) {
-        req.session.user_id = user._id;
+    const foundUser = await User.findAndValidate(username, password);
+    if (foundUser) {
+        req.session.user_id = foundUser._id;
         res.redirect('/todolist')
     } else {
         res.redirect('/login')
