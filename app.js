@@ -38,14 +38,14 @@ app.set('views', path.join(__dirname, '/views'))
 app.set("layout extractScripts", true)
 app.set('layout', 'layouts/boilerplate.ejs');
 
-// const requireLogin = function (req, res, next) {
-//     if (req.session.user_id) {
-//         next();
-//     }
-//     else {
-//         res.send('NOT LOGGED IN!')
-//     }
-// }
+const requireLogin = function (req, res, next) {
+    if (req.session.user_id) {
+        return next();
+    }
+    else {
+        res.redirect('/login')
+    }
+}
 
 app.get('/register', (req, res) => {
     res.render('register.ejs')
@@ -53,12 +53,7 @@ app.get('/register', (req, res) => {
 
 app.post('/register', async (req, res) => {
     const { username, password } = req.body;
-    // bcrypt.hash - auto-gen a salt and hash
-    const hashedPw = await bcrypt.hash(password, 10);
-    const user = new User({
-        username: username,
-        password: hashedPw
-    })
+    const user = new User({ username, password })
     await user.save();
     req.session.user_id = user._id;
     res.redirect('/todolist');
@@ -70,11 +65,10 @@ app.get('/login', (req, res) => {
 
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
-    const user = await User.findOne({ username: username });
-    const validPassword = await bcrypt.compare(password, user.password);
-    if (validPassword) {
+    const foundUser = await User.findAndValidate(username, password);
+    if (foundUser) {
+        req.session.user_id = foundUser._id;
         res.redirect('/todolist')
-        req.session.user_id = user._id;
     } else {
         res.redirect('/login')
     }
@@ -90,13 +84,8 @@ app.get('/todolist', async (req, res) => {
     res.render('index.ejs', { todos })
 })
 
-app.get('/todolist/new', (req, res) => {
-    if (!req.session.user_id) {
-        return res.redirect('/login')
-    }
-    else {
-        res.render('new.ejs')
-    }
+app.get('/todolist/new', requireLogin, (req, res) => {
+    res.render('new.ejs')
 });
 
 app.post('/todolist', async (req, res) => {
